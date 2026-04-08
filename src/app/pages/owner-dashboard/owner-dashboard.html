@@ -1,0 +1,158 @@
+<div class="owner-dashboard-page">
+  <section class="owner-dashboard-shell">
+    <header class="dashboard-header">
+      <div>
+        <p class="eyebrow">Buena Rosa 9</p>
+        <h1>Owner Dashboard</h1>
+      </div>
+
+      <div class="header-actions">
+        <a routerLink="/login" class="header-link">Log Out</a>
+      </div>
+    </header>
+
+    <section class="summary-grid">
+      @for (card of summaryCards; track card.label) {
+        <article
+          class="summary-card"
+          [class.property]="card.accent === 'property'"
+          [class.lease]="card.accent === 'lease'"
+          [class.occupants]="card.accent === 'occupants'"
+          [class.requests]="card.accent === 'requests'"
+        >
+          <p>{{ card.label }}</p>
+          <h2>{{ card.value }}</h2>
+        </article>
+      }
+    </section>
+
+    <section class="content-grid">
+      <div class="main-column">
+        <article class="panel">
+          <div class="panel-heading">
+            <div>
+              <h3>Owner Property Details</h3>
+            </div>
+          </div>
+
+          <div class="property-grid">
+            @for (item of leaseDetails; track item.label) {
+              <div class="info-card">
+                <span>{{ item.label }}</span>
+                <strong>{{ item.value }}</strong>
+              </div>
+            }
+          </div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-heading">
+            <div>
+              <h3>Community Notices</h3>
+            </div>
+          </div>
+
+          <div class="announcement-list">
+            @for (item of announcements; track item.title) {
+              <div class="announcement-item">
+                <div class="announcement-top">
+                  <span class="badge">{{ item.category }}</span>
+                  <small>{{ item.date }}</small>
+                </div>
+                <strong>{{ item.title }}</strong>
+                <p>{{ item.note }}</p>
+              </div>
+            }
+          </div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-heading">
+            <div>
+              <h3>Registered Owner Household</h3>
+            </div>
+          </div>
+
+          <div class="household-list">
+            @for (member of householdMembers; track member.name) {
+              <div class="household-item">
+                <div>
+                  <strong>{{ member.name }}</strong>
+                  <p>{{ member.note }}</p>
+                </div>
+                <span class="role-tag">{{ member.role }}</span>
+              </div>
+            }
+          </div>
+        </article>
+      </div>
+
+      <aside class="side-column">
+        <article class="panel compact">
+          <div class="panel-heading">
+            <div>
+              <h3>Owner Account Status</h3>
+            </div>
+          </div>
+
+          <div class="billing-card">
+            <div class="billing-row">
+              <span>Outstanding HOA Balance</span>
+              <strong>PHP 1,250</strong>
+            </div>
+            <div class="billing-row">
+              <span>Last Payment</span>
+              <strong>Jan 10, 2026</strong>
+            </div>
+            <div class="billing-row">
+              <span>Next Due Date</span>
+              <strong>Apr 15, 2026</strong>
+            </div>
+          </div>
+        </article>
+
+        <article class="panel compact">
+          <div class="panel-heading">
+            <div>
+              <h3>Owner Tools</h3>
+            </div>
+          </div>
+
+          <div class="action-list">
+            @for (action of quickActions; track action.title) {
+              @if (action.route) {
+                <a [routerLink]="action.route" [queryParams]="action.queryParams" class="action-button action-link-button">
+                  <strong>{{ action.title }}</strong>
+                </a>
+              } @else {
+                <button type="button" class="action-button">
+                  <strong>{{ action.title }}</strong>
+                </button>
+              }
+            }
+          </div>
+        </article>
+
+        <article class="panel compact">
+          <div class="panel-heading">
+            <div>
+              <h3>Submission History</h3>
+            </div>
+          </div>
+
+          <div class="request-list">
+            @for (item of recentRequests; track item.title) {
+              <div class="request-item">
+                <div>
+                  <strong>{{ item.title }}</strong>
+                  <p>{{ item.date }}</p>
+                </div>
+                <span class="status-chip">{{ item.status }}</span>
+              </div>
+            }
+          </div>
+        </article>
+      </aside>
+    </section>
+  </section>
+</div>

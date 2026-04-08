@@ -1,0 +1,86 @@
+<div class="concern-page">
+  <section class="concern-shell">
+    <header class="concern-header">
+      <div>
+        <p class="eyebrow">Buena Rosa 9</p>
+        <h1>Submit a Concern</h1>
+      </div>
+
+      <div class="header-actions">
+        <a [routerLink]="returnRoute" class="header-link">{{ returnLabel }}</a>
+      </div>
+    </header>
+
+    <section class="concern-grid">
+      <article class="form-panel">
+        <form class="concern-form">
+          <label class="field">
+            <span>Account Role</span>
+            <select>
+              <option [selected]="selectedRole === 'Owner'">Owner</option>
+              <option [selected]="selectedRole === 'Renter'">Renter</option>
+            </select>
+          </label>
+
+          <div class="field-row">
+            <label class="field">
+              <span>Resident Name</span>
+              <input type="text" placeholder="Enter your full name" />
+            </label>
+
+            <label class="field">
+              <span>Block and Lot</span>
+              <input type="text" placeholder="Block 3 Lot 14" />
+            </label>
+          </div>
+
+          <div class="field-row">
+            <label class="field">
+              <span>Category</span>
+              <select>
+                @for (category of categories; track category) {
+                  <option>{{ category }}</option>
+                }
+              </select>
+            </label>
+
+            <label class="field">
+              <span>Priority</span>
+              <select>
+                <option>Low</option>
+                <option>Medium</option>
+                <option>High</option>
+              </select>
+            </label>
+          </div>
+
+          <label class="field">
+            <span>Concern Title</span>
+            <input type="text" placeholder="Brief summary of the issue" />
+          </label>
+
+          <label class="field">
+            <span>Details</span>
+            <textarea rows="6" placeholder="Describe what happened, where it happened, and what action is needed."></textarea>
+          </label>
+
+          <div class="field-row">
+            <label class="field">
+              <span>Preferred Contact Number</span>
+              <input type="text" placeholder="0917-000-0000" />
+            </label>
+
+            <label class="field">
+              <span>Date Observed</span>
+              <input type="date" />
+            </label>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="submit-btn">Submit Concern</button>
+          </div>
+        </form>
+      </article>
+    </section>
+  </section>
+</div>

@@ -1,0 +1,122 @@
+<div class="guard-dashboard-page">
+  <section class="guard-dashboard-shell">
+    <header class="dashboard-header">
+      <div>
+        <p class="eyebrow">Buena Rosa 9</p>
+        <h1>Guard Dashboard</h1>
+      </div>
+
+      <div class="header-actions">
+        <a routerLink="/login" class="header-link">Log Out</a>
+      </div>
+    </header>
+
+    <section class="summary-grid">
+      @for (card of summaryCards; track card.label) {
+        <article
+          class="summary-card"
+          [class.visitors]="card.accent === 'visitors'"
+          [class.deliveries]="card.accent === 'deliveries'"
+          [class.pending]="card.accent === 'pending'"
+          [class.alerts]="card.accent === 'alerts'"
+        >
+          <p>{{ card.label }}</p>
+          <h2>{{ card.value }}</h2>
+        </article>
+      }
+    </section>
+
+    <section class="content-grid">
+      <div class="main-column">
+        <article class="panel visitor-panel">
+          <div class="panel-heading">
+            <div>
+              <h3>Active Visitor Entries</h3>
+            </div>
+            <span class="pill queue">{{ visitorQueue.length }} active</span>
+          </div>
+
+          <div class="queue-list">
+            @for (visitor of visitorQueue; track visitor.name + visitor.time) {
+              <div class="queue-item">
+                <div>
+                  <strong>{{ visitor.name }}</strong>
+                  <p>{{ visitor.type }} for {{ visitor.destination }}</p>
+                </div>
+                <div class="queue-meta">
+                  <span class="status-chip">{{ visitor.status }}</span>
+                  <small>{{ visitor.time }}</small>
+                </div>
+              </div>
+            }
+          </div>
+        </article>
+
+        <article class="panel delivery-panel">
+          <div class="panel-heading">
+            <div>
+              <h3>Recent Couriers and Drop-Offs</h3>
+            </div>
+            <span class="pill neutral">{{ deliveryLog.length }} entries</span>
+          </div>
+
+          <div class="delivery-list">
+            @for (delivery of deliveryLog; track delivery.courier + delivery.time) {
+              <div class="delivery-item">
+                <div>
+                  <strong>{{ delivery.courier }}</strong>
+                  <p>{{ delivery.item }}</p>
+                </div>
+                <div class="delivery-meta">
+                  <span>{{ delivery.destination }}</span>
+                  <small>{{ delivery.time }}</small>
+                </div>
+              </div>
+            }
+          </div>
+        </article>
+      </div>
+
+      <aside class="side-column">
+        <article class="panel compact tools-panel">
+          <div class="panel-heading">
+            <div>
+              <h3>Guard Tools</h3>
+            </div>
+          </div>
+
+          <div class="action-list">
+            @for (action of quickActions; track action.title) {
+              <button type="button" class="action-button">
+                <strong>{{ action.title }}</strong>
+              </button>
+            }
+          </div>
+        </article>
+
+        <article class="panel compact concerns-panel">
+          <div class="panel-heading">
+            <div>
+              <h3>Resident Concerns and Reports</h3>
+            </div>
+          </div>
+
+          <div class="concern-list">
+            @for (concern of guardConcerns; track concern.title) {
+              <div class="concern-item">
+                <div class="concern-top">
+                  <div>
+                    <strong>{{ concern.title }}</strong>
+                    <p>{{ concern.resident }} | {{ concern.unit }}</p>
+                  </div>
+                  <span class="status-chip">{{ concern.status }}</span>
+                </div>
+                <small>{{ concern.category }}</small>
+              </div>
+            }
+          </div>
+        </article>
+      </aside>
+    </section>
+  </section>
+</div>

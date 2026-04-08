@@ -1,0 +1,132 @@
+<div class="renter-dashboard-page">
+  <section class="renter-dashboard-shell">
+    <header class="dashboard-header">
+      <div>
+        <p class="eyebrow">Buena Rosa 9</p>
+        <h1>Renter Dashboard</h1>
+      </div>
+
+      <div class="header-actions">
+        <a routerLink="/login" class="header-link">Log Out</a>
+      </div>
+    </header>
+
+    <section class="summary-grid">
+      @for (card of summaryCards; track card.label) {
+        <article
+          class="summary-card"
+          [class.home]="card.accent === 'home'"
+          [class.lease]="card.accent === 'lease'"
+          [class.billing]="card.accent === 'billing'"
+          [class.requests]="card.accent === 'requests'"
+        >
+          <p>{{ card.label }}</p>
+          <h2>{{ card.value }}</h2>
+        </article>
+      }
+    </section>
+
+    <section class="content-grid">
+      <div class="main-column">
+        <article class="panel">
+          <div class="panel-heading">
+            <div>
+              <h3>Registered Rental Details</h3>
+            </div>
+          </div>
+
+          <div class="detail-grid">
+            @for (item of unitDetails; track item.label) {
+              <div class="info-card">
+                <span>{{ item.label }}</span>
+                <strong>{{ item.value }}</strong>
+              </div>
+            }
+          </div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-heading">
+            <div>
+              <h3>Community Notices</h3>
+            </div>
+          </div>
+
+          <div class="notice-list">
+            @for (item of notices; track item.title) {
+              <div class="notice-item">
+                <div class="notice-top">
+                  <span class="badge">{{ item.category }}</span>
+                  <small>{{ item.date }}</small>
+                </div>
+                <strong>{{ item.title }}</strong>
+                <p>{{ item.note }}</p>
+              </div>
+            }
+          </div>
+        </article>
+      </div>
+
+      <aside class="side-column">
+        <article class="panel compact tools-panel">
+          <div class="panel-heading">
+            <div>
+              <h3>Renter Tools</h3>
+            </div>
+          </div>
+
+          <div class="action-list">
+            @for (action of quickActions; track action.title) {
+              @if (action.route) {
+                <a [routerLink]="action.route" [queryParams]="action.queryParams" class="action-button action-link-button">
+                  <strong>{{ action.title }}</strong>
+                </a>
+              } @else {
+                <button type="button" class="action-button">
+                  <strong>{{ action.title }}</strong>
+                </button>
+              }
+            }
+          </div>
+        </article>
+
+        <article class="panel compact">
+          <div class="panel-heading">
+            <div>
+              <h3>Renter Account Status</h3>
+            </div>
+          </div>
+
+          <div class="billing-card">
+            @for (item of accountStatus; track item.label) {
+              <div class="billing-row">
+                <span>{{ item.label }}</span>
+                <strong>{{ item.value }}</strong>
+              </div>
+            }
+          </div>
+        </article>
+
+        <article class="panel compact">
+          <div class="panel-heading">
+            <div>
+              <h3>Submission History</h3>
+            </div>
+          </div>
+
+          <div class="request-list">
+            @for (item of recentRequests; track item.title) {
+              <div class="request-item">
+                <div>
+                  <strong>{{ item.title }}</strong>
+                  <p>{{ item.date }}</p>
+                </div>
+                <span class="status-chip">{{ item.status }}</span>
+              </div>
+            }
+          </div>
+        </article>
+      </aside>
+    </section>
+  </section>
+</div>

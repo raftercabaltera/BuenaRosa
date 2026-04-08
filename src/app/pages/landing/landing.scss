@@ -1,0 +1,147 @@
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+.landing-page {
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: linear-gradient(145deg, #f7fbf5 0%, #e5f0e7 55%, #fff8d6 100%);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.landing-card {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 760px);
+  padding: 42px 34px;
+  border-radius: 28px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(31, 107, 79, 0.12);
+  box-shadow: 0 22px 54px rgba(18, 53, 36, 0.14);
+}
+
+.logo {
+  width: min(220px, 55vw);
+  height: auto;
+  margin-bottom: 18px;
+}
+
+.eyebrow {
+  margin: 0;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #2d7c59;
+}
+
+h1 {
+  margin: 12px 0;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  line-height: 1.05;
+  color: #123524;
+}
+
+.description {
+  max-width: 560px;
+  margin: 0 auto;
+  line-height: 1.7;
+  color: #476158;
+}
+
+.button-group {
+  margin-top: 28px;
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.button-group a {
+  min-width: 150px;
+  padding: 14px 22px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 700;
+  transition: transform 0.2s ease;
+}
+
+.button-group a:hover {
+  transform: translateY(-2px);
+}
+
+.primary-btn {
+  background: #1f6b4f;
+  color: #fff;
+}
+
+.secondary-btn {
+  background: #fff6cc;
+  color: #123524;
+  border: 1px solid rgba(210, 177, 67, 0.3);
+}
+
+.background-bubble {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.5;
+  animation: float 9s ease-in-out infinite;
+}
+
+.bubble-one {
+  width: 280px;
+  height: 280px;
+  top: -40px;
+  left: -30px;
+  background: radial-gradient(circle at 30% 30%, #ffffff, #cce8d4 68%, #86bf99);
+}
+
+.bubble-two {
+  width: 360px;
+  height: 360px;
+  right: -90px;
+  top: 18%;
+  background: radial-gradient(circle at 30% 30%, #fffef2, #fff2a7 58%, #d8c15f);
+  animation-duration: 11s;
+}
+
+.bubble-three {
+  width: 240px;
+  height: 240px;
+  left: 12%;
+  bottom: -70px;
+  background: radial-gradient(circle at 30% 30%, #ffffff, #d7efe0 58%, #6aa985);
+  animation-duration: 10s;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-18px);
+  }
+}
+
+@media (max-width: 640px) {
+  .landing-card {
+    padding: 32px 22px;
+    border-radius: 22px;
+  }
+
+  .button-group {
+    flex-direction: column;
+  }
+
+  .button-group a {
+    width: 100%;
+  }
+}
