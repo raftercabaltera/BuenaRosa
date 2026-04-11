@@ -7,6 +7,8 @@ import { OwnerDashboard } from './pages/owner-dashboard/owner-dashboard';
 import { GuardDashboard } from './pages/guard-dashboard/guard-dashboard';
 import { RenterDashboard } from './pages/renter-dashboard/renter-dashboard';
 import { SubmitConcern } from './pages/submit-concern/submit-concern';
+import { GoogleLogin } from './pages/google-login/google-login';
+import { GooglePassword } from './pages/google-password/google-password';
 
 export const routes: Routes = [
   { path: '', component: Landing },
@@ -16,5 +18,7 @@ export const routes: Routes = [
   { path: 'guard-dashboard', component: GuardDashboard },
   { path: 'submit-concern', component: SubmitConcern },
   { path: 'login', component: Login },
-  { path: 'learn-more', component: LearnMore }
+  { path: 'learn-more', component: LearnMore },
+  { path: 'google-login', component: GoogleLogin },
+  { path: 'google-password', component: GooglePassword }
 ];
