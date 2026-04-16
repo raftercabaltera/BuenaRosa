@@ -1,0 +1,504 @@
+<div class="dashboard-page">
+  <section class="dashboard-shell">
+    <header class="dashboard-header">
+      <div class="header-copy">
+        <p class="eyebrow">Buena Rosa 9</p>
+        <h1>Officer Dashboard</h1>
+      </div>
+
+      <div class="header-side">
+        <div class="panel-actions">
+          @for (role of officerRoles; track role) {
+            <button
+              type="button"
+              class="toggle-button"
+              [style.background]="selectedOfficerRole === role ? 'rgba(36, 83, 63, 0.24)' : 'rgba(36, 83, 63, 0.11)'"
+              [style.border]="selectedOfficerRole === role ? '1px solid rgba(36, 83, 63, 0.36)' : '1px solid transparent'"
+              (click)="setOfficerRole(role)"
+            >
+              {{ role }}
+            </button>
+          }
+        </div>
+
+        <a routerLink="/login" class="header-link">Log Out</a>
+
+        <div class="subdivision-mark">
+          <img class="mark-logo" src="images/buenarosa9-nobg.png" alt="Buena Rosa 9 logo" />
+          <div class="mark-copy">
+            <small>Community Office</small>
+            <strong>Phase 1 | Phase 2</strong>
+            <span>Homeowners Association</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section class="stats-grid">
+      @for (card of statCards; track card.label) {
+        <article
+          class="stat-card"
+          [class.owner]="card.accent === 'owner'"
+          [class.renter]="card.accent === 'renter'"
+          [class.vacant]="card.accent === 'vacant'"
+          [class.pending]="card.accent === 'pending'"
+          [class.household]="card.accent === 'household'"
+          [class.rate]="card.accent === 'rate'"
+        >
+          @if (card.accent === 'rate') {
+            <div class="rate-card-content">
+              <div
+                class="rate-ring"
+                [style.--progress]="occupancyRateValue"
+                [attr.aria-label]="'Occupied rate: ' + card.value"
+              >
+                <div class="rate-ring-inner">
+                  <strong>{{ card.value }}</strong>
+                  <span>occupied</span>
+                </div>
+              </div>
+              <div class="rate-copy">
+                <p>{{ card.label }}</p>
+                <small>{{ card.note }}</small>
+              </div>
+            </div>
+          } @else {
+            <p>{{ card.label }}</p>
+            <h2>{{ card.value }}</h2>
+            <small>{{ card.note }}</small>
+          }
+        </article>
+      }
+    </section>
+
+    <section class="insights-grid">
+      @if (canAccessModule('concerns')) {
+        <article class="insight-card concerns-card">
+          <div class="panel-heading">
+            <div>
+              <h3>Concerns Inbox</h3>
+              <small>{{ concernScopeLabel }}</small>
+            </div>
+            <div class="panel-actions">
+              <button type="button" class="toggle-button" (click)="toggleConcerns()">
+                {{ concernsExpanded ? 'Collapse' : 'View all' }}
+              </button>
+            </div>
+          </div>
+
+          <div class="concern-list" [class.concern-list-collapsed]="!concernsExpanded">
+            @for (concern of visibleConcerns; track concern.title + concern.resident) {
+              <div class="concern-item">
+                <div class="concern-top">
+                  <div>
+                    <strong>{{ concern.title }}</strong>
+                    <p>{{ concern.resident }} | {{ concern.unit }}</p>
+                  </div>
+                  <span class="status-chip">{{ concern.status }}</span>
+                </div>
+                <small>{{ concern.category }}</small>
+
+                @if (canManageConcerns) {
+                  <div class="panel-actions">
+                    <button type="button" class="toggle-button" (click)="advanceConcernStatus(concern)">
+                      Advance Status
+                    </button>
+                  </div>
+                }
+              </div>
+            } @empty {
+              <p class="empty-state">No concern access for this role.</p>
+            }
+          </div>
+        </article>
+      }
+
+      @if (canAccessModule('overview')) {
+        <article class="insight-card phase-comparison-card">
+          <div class="panel-heading">
+            <div>
+              <h3>Phase Comparison</h3>
+            </div>
+          </div>
+
+          <div class="phase-summary-list">
+            @for (summary of phaseSummaries; track summary.phase) {
+              <div class="phase-summary-card">
+                <div class="phase-summary-top">
+                  <div>
+                    <strong>{{ summary.phase }}</strong>
+                    <p>{{ summary.occupiedHomes }} occupied of {{ summary.totalHomes }} homes</p>
+                  </div>
+                  <span class="summary-rate">{{ getPhaseOccupancyRate(summary) }}</span>
+                </div>
+
+                <div class="summary-metrics">
+                  <div>
+                    <span>Tenant-Occupied</span>
+                    <strong>{{ summary.tenantHomes }}</strong>
+                  </div>
+                  <div>
+                    <span>Vacant</span>
+                    <strong>{{ summary.vacantHomes }}</strong>
+                  </div>
+                  <div>
+                    <span>Pending</span>
+                    <strong>{{ summary.pendingHomes }}</strong>
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        </article>
+      }
+    </section>
+
+    <section class="record-controls">
+      <article class="insight-card controls-card">
+        <div class="panel-heading">
+          <div>
+            <h3>Officer Access Profile</h3>
+            <small>{{ selectedOfficerRole }}</small>
+            <p class="eyebrow">{{ restrictionTierLabel }}</p>
+          </div>
+        </div>
+
+        <div class="panel-actions">
+          @for (menu of accessibleMenus; track menu.id) {
+            <span class="pill">{{ menu.label }}</span>
+          }
+        </div>
+
+        <div class="concern-list">
+          @for (restriction of selectedRoleRestrictions; track restriction) {
+            <p class="empty-state">{{ restriction }}</p>
+          }
+        </div>
+
+        <div class="role-widget-grid">
+          @for (widget of roleWidgets; track widget.label) {
+            <article class="role-widget-card">
+              <p>{{ widget.label }}</p>
+              <h4>{{ widget.value }}</h4>
+              <small>{{ widget.note }}</small>
+            </article>
+          }
+        </div>
+      </article>
+    </section>
+
+    @if (canAccessModule('house-records')) {
+      <section class="record-controls">
+        <article class="insight-card controls-card">
+          <div class="panel-heading">
+            <div>
+              <h3>Search, Filter, and Sort</h3>
+            </div>
+            <button type="button" class="clear-button" (click)="clearFilters()">Clear filters</button>
+          </div>
+
+          <div class="controls-grid">
+            <label class="field field-search">
+              <span>Search</span>
+              <input
+                type="text"
+                placeholder="Resident, block/lot, contact, remarks"
+                [(ngModel)]="searchTerm"
+              />
+            </label>
+
+            <label class="field">
+              <span>Phase</span>
+              <select [(ngModel)]="phaseFilter">
+                <option value="all">All phases</option>
+                <option value="Phase 1">Phase 1</option>
+                <option value="Phase 2">Phase 2</option>
+              </select>
+            </label>
+
+            <label class="field">
+              <span>Status</span>
+              <select [(ngModel)]="statusFilter">
+                <option value="all">All statuses</option>
+                <option value="owner">Owner-Occupied</option>
+                <option value="renter">Tenant-Occupied</option>
+                <option value="vacant">Vacant</option>
+                <option value="pending">Pending</option>
+              </select>
+            </label>
+
+            <label class="field">
+              <span>Sort by</span>
+              <select [(ngModel)]="sortField">
+                <option value="block-lot">Block and Lot</option>
+                <option value="resident">Resident Name</option>
+                <option value="status">Occupancy Status</option>
+                <option value="move-in">Move-in Date</option>
+              </select>
+            </label>
+
+            <label class="field">
+              <span>Order</span>
+              <select [(ngModel)]="sortDirection">
+                <option value="asc">Ascending</option>
+                <option value="desc">Descending</option>
+              </select>
+            </label>
+          </div>
+        </article>
+      </section>
+    }
+
+    @if (canAccessModule('house-records')) {
+      <section class="content-grid">
+      <div class="phase-panel">
+        <div class="panel-heading">
+          <div>
+            <h3>Phase 1 Houses</h3>
+          </div>
+          <span class="pill">{{ filteredPhase1Houses.length }} / {{ phase1TotalHomes }} homes</span>
+        </div>
+
+        <div class="house-list">
+          @for (house of filteredPhase1Houses; track house.id) {
+            <button
+              type="button"
+              class="house-bubble"
+              [class.active]="selectedHouseId === house.id"
+              [class.owner]="house.status === 'owner'"
+              [class.renter]="house.status === 'renter'"
+              [class.vacant]="house.status === 'vacant'"
+              [class.pending]="house.status === 'pending'"
+              (click)="selectHouse(house)"
+            >
+              <span class="house-code">Block {{ house.block }} | Lot {{ house.lot }}</span>
+              <strong>{{ house.residentName }}</strong>
+              <small>{{ getStatusLabel(house.status) }}</small>
+            </button>
+          } @empty {
+            <p class="empty-state">No matching records in Phase 1.</p>
+          }
+        </div>
+      </div>
+
+      <div class="phase-panel">
+        <div class="panel-heading">
+          <div>
+            <h3>Phase 2 Houses</h3>
+          </div>
+          <span class="pill">{{ filteredPhase2Houses.length }} / {{ phase2TotalHomes }} homes</span>
+        </div>
+
+        <div class="house-list">
+          @for (house of filteredPhase2Houses; track house.id) {
+            <button
+              type="button"
+              class="house-bubble"
+              [class.active]="selectedHouseId === house.id"
+              [class.owner]="house.status === 'owner'"
+              [class.renter]="house.status === 'renter'"
+              [class.vacant]="house.status === 'vacant'"
+              [class.pending]="house.status === 'pending'"
+              (click)="selectHouse(house)"
+            >
+              <span class="house-code">Block {{ house.block }} | Lot {{ house.lot }}</span>
+              <strong>{{ house.residentName }}</strong>
+              <small>{{ getStatusLabel(house.status) }}</small>
+            </button>
+          } @empty {
+            <p class="empty-state">No matching records in Phase 2.</p>
+          }
+        </div>
+      </div>
+
+      <aside class="details-panel">
+        <div class="panel-heading">
+          <div>
+            <h3>{{ hasSelectedHouse ? selectedHouse.phase : 'No House Selected' }}</h3>
+          </div>
+          <span
+            class="pill status-pill"
+            [class.owner]="hasSelectedHouse && selectedHouse.status === 'owner'"
+            [class.renter]="hasSelectedHouse && selectedHouse.status === 'renter'"
+            [class.vacant]="hasSelectedHouse && selectedHouse.status === 'vacant'"
+            [class.pending]="hasSelectedHouse && selectedHouse.status === 'pending'"
+          >
+            {{ hasSelectedHouse ? getStatusLabel(selectedHouse.status) : 'No Record' }}
+          </span>
+        </div>
+
+        @if (canCreateHouse || canEditHouse || canDeleteHouse) {
+          <div class="record-actions">
+            @if (canCreateHouse) {
+              <button type="button" class="toggle-button" (click)="beginCreateHouse()">Add Record</button>
+            }
+            @if (canEditHouse) {
+              <button
+                type="button"
+                class="toggle-button"
+                [disabled]="!hasSelectedHouse"
+                (click)="beginEditSelectedHouse()"
+              >
+                Edit Record
+              </button>
+            }
+            @if (canDeleteHouse) {
+              <button
+                type="button"
+                class="toggle-button danger"
+                [disabled]="!hasSelectedHouse"
+                (click)="requestDeleteSelectedHouse()"
+              >
+                Delete Record
+              </button>
+            }
+          </div>
+        } @else {
+          <p class="empty-state">This role has read-only access to house records.</p>
+        }
+
+        @if (deleteConfirmationOpen) {
+          <div class="delete-banner">
+            <p>Delete selected house record?</p>
+            <div class="delete-actions">
+              <button type="button" class="toggle-button danger" (click)="confirmDeleteSelectedHouse()">
+                Yes, Delete
+              </button>
+              <button type="button" class="toggle-button" (click)="cancelDeleteSelectedHouse()">
+                Cancel
+              </button>
+            </div>
+          </div>
+        }
+
+        @if (formMode !== 'view') {
+          <div class="details-card form-card">
+            <div class="details-top">
+              <h2>{{ formMode === 'create' ? 'New House Record' : 'Edit House Record' }}</h2>
+              <p>Fill in resident details and occupancy status.</p>
+            </div>
+
+            <div class="form-grid">
+              <label class="field">
+                <span>Phase</span>
+                <select [(ngModel)]="houseForm.phase">
+                  <option value="Phase 1">Phase 1</option>
+                  <option value="Phase 2">Phase 2</option>
+                </select>
+              </label>
+
+              <label class="field">
+                <span>Occupancy Status</span>
+                <select [(ngModel)]="houseForm.status">
+                  <option value="owner">Owner-Occupied</option>
+                  <option value="renter">Tenant-Occupied</option>
+                  <option value="vacant">Vacant</option>
+                  <option value="pending">Pending</option>
+                </select>
+              </label>
+
+              <label class="field">
+                <span>Block</span>
+                <input type="number" min="1" [(ngModel)]="houseForm.block" />
+              </label>
+
+              <label class="field">
+                <span>Lot</span>
+                <input type="number" min="1" [(ngModel)]="houseForm.lot" />
+              </label>
+
+              <label class="field full-width">
+                <span>Resident Name</span>
+                <input type="text" [(ngModel)]="houseForm.residentName" />
+              </label>
+
+              <label class="field full-width">
+                <span>Contact Number</span>
+                <input type="text" [(ngModel)]="houseForm.contactNumber" />
+              </label>
+
+              <label class="field full-width">
+                <span>Move-in Date</span>
+                <input type="text" placeholder="e.g. Apr 03, 2025" [(ngModel)]="houseForm.moveInDate" />
+              </label>
+
+              <label class="field full-width">
+                <span>Remarks</span>
+                <textarea rows="3" [(ngModel)]="houseForm.remarks"></textarea>
+              </label>
+            </div>
+
+            @if (formError) {
+              <p class="form-error">{{ formError }}</p>
+            }
+
+            <div class="form-actions">
+              <button type="button" class="toggle-button" (click)="saveHouse()">Save</button>
+              <button type="button" class="toggle-button" (click)="cancelForm()">Cancel</button>
+            </div>
+          </div>
+        } @else if (hasSelectedHouse) {
+          <div class="details-card">
+            <div class="details-top">
+              <h2>Block {{ selectedHouse.block }} Lot {{ selectedHouse.lot }}</h2>
+              <p>{{ selectedHouse.residentName }}</p>
+            </div>
+
+            <div class="detail-row">
+              <span>Contact Number</span>
+              <strong>{{ selectedHouse.contactNumber }}</strong>
+            </div>
+            <div class="detail-row">
+              <span>Move-in Date</span>
+              <strong>{{ selectedHouse.moveInDate }}</strong>
+            </div>
+            <div class="detail-row remarks">
+              <span>Remarks</span>
+              <strong>{{ selectedHouse.remarks }}</strong>
+            </div>
+          </div>
+        } @else {
+          <div class="details-card empty-record">
+            <p>No house records available. Add a new record to get started.</p>
+          </div>
+        }
+
+        @if (canAccessModule('audit')) {
+          <div class="audit-card">
+            <div class="audit-heading">
+              <h4>Activity Log</h4>
+              <label class="field audit-scope">
+                <span>Scope</span>
+                <select [(ngModel)]="auditScope">
+                  <option value="selected">Selected house</option>
+                  <option value="all">All houses</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="audit-list">
+              @for (entry of visibleAuditLogs; track entry.id) {
+                <div
+                  class="audit-item"
+                  [class.created]="entry.action === 'Created'"
+                  [class.updated]="entry.action === 'Updated'"
+                  [class.deleted]="entry.action === 'Deleted'"
+                >
+                  <div class="audit-item-top">
+                    <strong>{{ entry.action }}</strong>
+                    <small>{{ formatAuditTimestamp(entry.timestamp) }}</small>
+                  </div>
+                  <p>{{ entry.location }}</p>
+                  <span>{{ entry.summary }}</span>
+                </div>
+              } @empty {
+                <p class="empty-state">No activity yet for this scope.</p>
+              }
+            </div>
+          </div>
+        }
+      </aside>
+      </section>
+    }
+  </section>
+</div>
